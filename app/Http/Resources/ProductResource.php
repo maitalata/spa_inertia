@@ -17,11 +17,12 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'price' =>  $price =$this->price / 100,
-            'price_formatted' => '$' . number_format($price, 2),
+            'price' => $this->price,
+            'price_formatted' => '$' . number_format($this->price, 2),
             'brand' => $this->brand,
             'weight' => $this->weight,
             'category' => CategoryResource::make($this->category),
+            'description' => $this->description,
         ];
     }
 }

@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory(5)
             ->has(
-                Product::factory(10)->state(
+                Product::factory(30)->state(
                     function () use ($categories) {
                         return ['category_id' => $categories->random()->id];
                     }

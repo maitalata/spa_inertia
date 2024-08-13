@@ -1,11 +1,31 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import Pagination from '@/Components/Pagination.vue';
+import { Head, Link, router } from '@inertiajs/vue3';
 
+const deleteRow = (id) => {
+    if (confirm('Are you sure you want to delete this product?')) {
+        router.delete(route('products.destroy', id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log('Product deleted successfully');
+            },
+        });
+    }
+}
+
+
+// defineProps({
+//     products: {
+//         type: Array,
+//         required: true,
+//     },
+// });
+// old before pagination
 
 defineProps({
     products: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });
@@ -30,6 +50,9 @@ defineProps({
                     <table class="w-full text-sm text-left text-gray-500 rtl:text-right">
                         <thead class="text-xs text-gray-700 uppercase border-b bg-gray-50">
                             <tr>
+                                <th scope="col" class="px-6 py-3" width="5" >
+                                    No
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Product name
                                 </th>
@@ -48,7 +71,10 @@ defineProps({
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="product in products" :key="product.id" class="bg-white border-b hover:bg-gray-50">
+                            <tr v-for="(product, index) in products.data" :key="product.id" class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    {{ products.meta.from + index }}
+                                </td>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     {{ product.name }}
                                 </th>
@@ -62,39 +88,14 @@ defineProps({
                                     {{ product.weight }}
                                 </td>
                                 <td class="px-6 py-4 space-x-2">
-                                    <a href="#" class="font-medium text-gray-600 hover:underline">Show</a>
-                                    <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                                    <a href="#" class="font-medium text-red-600 hover:underline">Delete</a>
+                                    <Link :href="route('products.show', product.id)" class="font-medium text-gray-600 hover:underline">Show</Link>
+                                    <Link :href="route('products.edit', product.id)" class="font-medium text-blue-600 hover:underline">Edit</Link>
+                                    <a href="#" class="font-medium text-red-600 hover:underline" @click.prevent="deleteRow(product.id)">Delete</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <nav class="flex flex-wrap items-center justify-between px-4 py-2 flex-column md:flex-row" aria-label="Table navigation">
-                        <span class="block w-full mb-4 text-sm font-normal text-gray-700 md:mb-0 md:inline md:w-auto">Showing <span class="font-semibold text-gray-700">1-10</span> of <span class="font-semibold text-gray-700">1000</span></span>
-                        <ul class="inline-flex h-8 -space-x-px text-sm rtl:space-x-reverse">
-                            <li>
-                                <a href="#" class="flex items-center justify-center h-8 px-3 leading-tight text-gray-500 ms-0 hover:text-gray-700">Previous</a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center justify-center h-8 px-3 leading-tight text-gray-500 hover:text-gray-700">1</a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center justify-center h-8 px-3 leading-tight text-gray-500 hover:text-gray-700">2</a>
-                            </li>
-                            <li>
-                                <a href="#" aria-current="page" class="flex items-center justify-center h-8 px-3 text-blue-600 hover:text-blue-700">3</a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center justify-center h-8 px-3 leading-tight text-gray-500 hover:text-gray-700">4</a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center justify-center h-8 px-3 leading-tight text-gray-500 hover:text-gray-700">5</a>
-                            </li>
-                            <li>
-                        <a href="#" class="flex items-center justify-center h-8 px-3 leading-tight text-gray-500 hover:text-gray-700">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                   <Pagination :meta="products.meta" />
                 </div>
             </div>
         </div>

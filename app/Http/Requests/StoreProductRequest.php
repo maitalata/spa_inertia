@@ -30,4 +30,21 @@ class StoreProductRequest extends FormRequest
             'description' => 'required|string',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'category_id' => 'Category',
+        ];
+    }
+
+    // public function prepareForValidation()
+    // {
+    //     $this->merge(
+    //         [
+    //             'price' => $this->price * 100,
+    //         ]
+    //     );
+    // }
+
 }
